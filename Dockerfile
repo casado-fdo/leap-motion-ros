@@ -101,3 +101,6 @@ LABEL \
     cpk.label.project.${ORGANIZATION}.${NAME}.maintainer="${MAINTAINER}"
 # <== Do not change the code above this line
 # <==================================================
+
+RUN leapctl eula -y
+RUN apt-get install -y libxcb-util-dev
