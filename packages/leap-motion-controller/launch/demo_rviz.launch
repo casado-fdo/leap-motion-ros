@@ -1,0 +1,4 @@
+<launch>
+  <!-- Launch RViz using predefined configuration file -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
+</launch>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="leap_hands">
+  
+  <!-- Base link -->
+  <link name="leap_base_link"/>
+
+  <!-- Right Hand -->
+  <link name="leap_right_hand">
+    <visual>
+      <origin xyz="0 0 0" rpy="-1.5708 3.14159 0"/>
+      <geometry>
+        <mesh filename="package://leap_motion_controller/urdf/meshes/hand.stl" scale="0.005 0.005 0.005" />
+      </geometry>
+      <material name="yellow-orange">
+        <color rgba="0.9 0.6 0.2 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Left Hand -->
+  <link name="leap_left_hand">
+    <visual>
+      <origin xyz="0 0 0" rpy="-1.5708 3.14159 0"/>
+      <geometry>
+        <mesh filename="package://leap_motion_controller/urdf/meshes/hand.stl" scale="-0.005 0.005 0.005" />
+      </geometry>
+      <material name="blue-violet">
+        <color rgba="0.2 0.6 0.9 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joints -->
+  <joint name="right_hand_joint" type="floating">
+    <parent link="leap_base_link"/>
+    <child link="leap_right_hand"/>
+  </joint>
+
+  <joint name="left_hand_joint" type="floating">
+    <parent link="leap_base_link"/>
+    <child link="leap_left_hand"/>
+  </joint>
+
+</robot>
