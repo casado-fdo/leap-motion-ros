@@ -34,7 +34,9 @@ class LeapMotionController(leap.Listener):
             rospy.spin()
 
     def leap_to_ros_coords(self, pos, orientation):
-        new_pos = Point(pos.x, -pos.z, pos.y)
+        '''Converts Leap coordinates to ROS coordinates by flipping the y and z axes and changing the sign of the y axis.
+        Also, the leap coordinates are provided in millimeters, so they are converted to meters.'''
+        new_pos = Point(pos.x/1000, -pos.z/1000, pos.y/100)
         new_orientation = Quaternion(orientation.x, - orientation.z, orientation.y, orientation.w)
 
         return new_pos, new_orientation
@@ -69,9 +71,9 @@ class LeapMotionController(leap.Listener):
                 t.header.stamp = time
                 t.header.frame_id = self.base_link
                 t.child_frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
-                t.transform.translation.x = pos.x / 100
-                t.transform.translation.y = pos.y / 100
-                t.transform.translation.z = pos.z / 100
+                t.transform.translation.x = pos.x 
+                t.transform.translation.y = pos.y 
+                t.transform.translation.z = pos.z 
                 t.transform.rotation.x = orientation.x
                 t.transform.rotation.y = orientation.y
                 t.transform.rotation.z = orientation.z
@@ -83,9 +85,9 @@ class LeapMotionController(leap.Listener):
                 ros_pose.header = Header()
                 ros_pose.header.frame_id = self.base_link
                 ros_pose.header.stamp = time
-                ros_pose.pose.position.x = pos.x / 100
-                ros_pose.pose.position.y = pos.y / 100
-                ros_pose.pose.position.z = pos.z / 100
+                ros_pose.pose.position.x = pos.x 
+                ros_pose.pose.position.y = pos.y 
+                ros_pose.pose.position.z = pos.z 
                 ros_pose.pose.orientation.x = orientation.x
                 ros_pose.pose.orientation.y = orientation.y
                 ros_pose.pose.orientation.z = orientation.z
