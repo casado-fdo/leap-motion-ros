@@ -36,7 +36,7 @@ class LeapMotionController(leap.Listener):
     def leap_to_ros_coords(self, pos, orientation):
         '''Converts Leap coordinates to ROS coordinates by flipping the y and z axes and changing the sign of the y axis.
         Also, the leap coordinates are provided in millimeters, so they are converted to meters.'''
-        new_pos = Point(pos.x/1000, -pos.z/1000, pos.y/100)
+        new_pos = Point(pos.x/1000, -pos.z/1000, pos.y/1000)
         new_orientation = Quaternion(orientation.x, - orientation.z, orientation.y, orientation.w)
 
         return new_pos, new_orientation
@@ -98,7 +98,6 @@ class LeapMotionController(leap.Listener):
                 grab.header = Header()
                 grab.header.frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
                 grab.header.stamp = time
-                #grab.radiation_type = Range.ULTRASOUND
                 grab.field_of_view = 1
                 grab.min_range = 0
                 grab.max_range = 1

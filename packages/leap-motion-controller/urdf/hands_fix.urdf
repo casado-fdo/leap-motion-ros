@@ -9,7 +9,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="-1.5708 3.14159 0"/>
       <geometry>
-        <mesh filename="package://leap_motion_controller/urdf/meshes/hand.stl" scale="0.005 0.005 0.005" />
+        <mesh filename="package://leap_motion_controller/urdf/meshes/hand.stl" scale="0.001 0.001 0.001" />
       </geometry>
       <material name="yellow-orange">
         <color rgba="0.9 0.6 0.2 1.0"/>
@@ -22,7 +22,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="-1.5708 3.14159 0"/>
       <geometry>
-        <mesh filename="package://leap_motion_controller/urdf/meshes/hand.stl" scale="-0.005 0.005 0.005" />
+        <mesh filename="package://leap_motion_controller/urdf/meshes/hand.stl" scale="-0.001 0.001 0.001" />
       </geometry>
       <material name="blue-violet">
         <color rgba="0.2 0.6 0.9 1.0"/>

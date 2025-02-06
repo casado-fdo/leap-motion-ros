@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
       Splitter Ratio: 0.5
     Tree Height: 928
   - Class: rviz/Selection
@@ -65,7 +66,7 @@ Visualization Manager:
         leap_right_hand:
           Value: true
       Marker Alpha: 1
-      Marker Scale: 1
+      Marker Scale: 0.5
       Name: TF
       Show Arrows: true
       Show Axes: true
@@ -156,7 +157,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 11.786540985107422
+      Distance: 1.9319329261779785
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -164,17 +165,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -0.010564417578279972
+        Y: 0.04350648447871208
+        Z: 0.11206967383623123
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5803981423377991
+      Pitch: 0.1703982949256897
       Target Frame: <Fixed Frame>
-      Yaw: 4.81358003616333
+      Yaw: 4.718583583831787
     Saved: ~
 Window Geometry:
   Displays:
@@ -193,4 +194,4 @@ Window Geometry:
     collapsed: false
   Width: 2170
   X: 299
-  Y: 416
+  Y: 379
