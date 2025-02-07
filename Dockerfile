@@ -5,7 +5,6 @@ ARG PROJECT_PATH="/lmc"
 RUN mkdir -p ${PROJECT_PATH}
 WORKDIR ${PROJECT_PATH}
 
-
 RUN apt update && apt install -y gnupg2 && rm -rf /var/lib/apt/lists/*
 RUN wget -qO - https://repo.ultraleap.com/keys/apt/gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/ultraleap.gpg
 RUN echo 'deb [arch=amd64] https://repo.ultraleap.com/apt stable main' | tee /etc/apt/sources.list.d/ultraleap.list
@@ -21,6 +20,10 @@ RUN wget -qO Miniforge3.sh https://github.com/conda-forge/miniforge/releases/lat
 
 SHELL ["/bin/bash", "-c"]
 
+RUN mkdir -p /catkin_ws/src
+WORKDIR /catkin_ws
+COPY ./leap-motion-controller /catkin_ws/src/leap-motion-controller
+
 RUN . /opt/miniforge3/etc/profile.d/conda.sh \
     && . /opt/miniforge3/etc/profile.d/mamba.sh \
     && mamba create -n ros \
@@ -35,16 +38,9 @@ RUN . /opt/miniforge3/etc/profile.d/conda.sh \
     && python -m build leapc-cffi \
     && pip install leapc-cffi/dist/leapc_cffi-0.0.1.tar.gz \
     && pip install -e leapc-python-api \
-    && pip install empy==3.* 
-
-RUN mkdir -p /catkin_ws/src
-WORKDIR /catkin_ws
-COPY ./leap-motion-controller /catkin_ws/src/leap-motion-controller
-RUN . /opt/miniforge3/etc/profile.d/conda.sh \
-    && . /opt/miniforge3/etc/profile.d/mamba.sh \ 
-    && mamba activate ros \
-    && catkin init && catkin build
-
+    && pip install empy==3.* \
+    && catkin init && catkin build --workspace /catkin_ws
+    
 ENV GAZEBO_RESOURCE_PATH=""
 ENV GAZEBO_PLUGIN_PATH=""
 ENV GAZEBO_MODEL_PATH=""

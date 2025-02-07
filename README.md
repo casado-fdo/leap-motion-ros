@@ -1,31 +1,41 @@
-# LeapMotion Docker
+# ROS LeapMotion Bridge (2025)
 
-Docker containerization for developing ROS apps. This image is based on [`ubuntu:22.04`](https://hub.docker.com/_/ubuntu), and with tweaks to enable [`cpk`](https://cpk.readthedocs.io/en/latest/), `ros-noetic-desktop-full`, `mDNS`, and the Leap Motion Controller.
+## Overview
+This package provides a basic ROS Noetic driver for the LeapMotion controller, leveraging the latest SDK (the only available version in 2025, supported only on Ubuntu 22.04). To ensure compatibility and ease of deployment, both the SDK and the ROS package are fully containerized using Docker.
 
-## Build
+## Features
+- Publishes LeapMotion hand tracking data to ROS topics (currently only hand pose and grabbing).
+- Uses the latest official LeapMotion SDK together with ROS Noetic.
+- Provides a Dockerized setup to simplify installation and execution.
 
+
+## Installation and Usage
+### 1. Clone the Repository
 ```bash
-cpk decorate -m RIPL ubuntu:22.04 ripl/ubuntu:22.04
-git clone --recurse-submodules https://github.com/ripl/leapmotion-docker.git && cd leapmotion-docker/
-cpk build
+git clone https://github.com/casado-fdo/leapmotion-docker.git
+cd leapmotion-docker
 ```
 
-## Run
-
+### 2. Build the Docker Container
+Ensure Docker is installed on your system. Then, build the container:
 ```bash
-# start the Leap Motion Controller, attaching it to the ROS network on Husky1
-cpk run -L husky1 --net host -- --privileged
-# start the Leap Motion Controller with the local ROS network
-cpk run -L local --net host -- --privileged
-# start the GUI demo
-cpk run -X --net host -- --privileged
+make .build
 ```
+This will download and install the LeapMotion SDK, and set up ROS Noetic inside the container.
 
-## Development
-
+### 3. Run
+Once the container is built, simply run:
 ```bash
-# start the container in interactive mode
-cpk run -f -n dev -c bash -M -X --net host -- --privileged
-# start the container in detached mode
-cpk run -f -n dev -c bash -M -X --net host -d -- --privileged
+make start
 ```
+This will start the container and launch the LeapMotion SDK together with the ROS nodes.
+
+### ROS Topics
+The following ROS topics will be available:
+- `/leapmotion/hands/right/pose` – Hand tracking data (position and orientation) for the right hand.
+- `/leapmotion/hands/left/pose` – Hand tracking data (position and orientation) for the left hand.
+- `/leapmotion/hands/right/grab` – Value in the range [0.0, 1.0] indicating whether the hand is open (0.0) or closed (1.0).
+- `/leapmotion/hands/left/grab` – Value in the range [0.0, 1.0] indicating whether the hand is open (0.0) or closed (1.0).
+
+## License
+This project is licensed under the MIT License. See `LICENSE` for details.

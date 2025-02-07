@@ -16,10 +16,10 @@ class LeapMotionController(leap.Listener):
         self.base_link = rospy.get_param('~base_link', DEFAULT_BASE_LINK)
         self.left_link = "leap_left_hand"
         self.right_link = "leap_right_hand"
-        self.pub_left = rospy.Publisher('/hands/left/pose', PoseStamped, queue_size=10)
-        self.pub_right = rospy.Publisher('/hands/right/pose', PoseStamped, queue_size=10)
-        self.pub_left_grab = rospy.Publisher('/hands/left/grab', Range, queue_size=10)
-        self.pub_right_grab = rospy.Publisher('/hands/right/grab', Range, queue_size=10)
+        self.pub_left = rospy.Publisher('/leapmotion/hands/left/pose', PoseStamped, queue_size=10)
+        self.pub_right = rospy.Publisher('/leapmotion/hands/right/pose', PoseStamped, queue_size=10)
+        self.pub_left_grab = rospy.Publisher('/leapmotion/hands/left/grab', Range, queue_size=10)
+        self.pub_right_grab = rospy.Publisher('/leapmotion/hands/right/grab', Range, queue_size=10)
 
         # Define a TF link for each hand with base_link as parent
         self.tfBuffer = tf2_ros.Buffer()

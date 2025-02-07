@@ -116,7 +116,7 @@ Visualization Manager:
       Enabled: true
       Name: Left Grab
       Queue Size: 10
-      Topic: /hands/left/grab
+      Topic: /leapmotion/hands/left/grab
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -126,7 +126,7 @@ Visualization Manager:
       Enabled: true
       Name: Right Grab
       Queue Size: 10
-      Topic: /hands/right/grab
+      Topic: /leapmotion/hands/right/grab
       Unreliable: false
       Value: true
   Enabled: true
