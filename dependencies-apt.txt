@@ -1,6 +1,0 @@
-# LIST YOUR APT PACKAGES HERE
-
-freeglut3-dev
-git
-libnss-mdns
-ultraleap-hand-tracking

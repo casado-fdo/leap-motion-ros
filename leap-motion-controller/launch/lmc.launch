@@ -7,5 +7,5 @@
 
   <node name="lmc" pkg="leap_motion_controller" type="lmc.py"/>
 
-  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" /> -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
 </launch>
