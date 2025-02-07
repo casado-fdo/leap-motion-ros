@@ -12,7 +12,7 @@ This package provides a basic ROS Noetic driver for the LeapMotion controller, l
 ## Installation and Usage
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/casado-fdo/leapmotion-docker.git
+git clone https://github.com/casado-fdo/leap-motion-ros.git
 cd leapmotion-docker
 ```
 
