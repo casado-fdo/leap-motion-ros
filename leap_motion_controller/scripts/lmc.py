@@ -34,10 +34,10 @@ class LeapMotionController(leap.Listener):
             rospy.spin()
 
     def leap_to_ros_coords(self, pos, orientation):
-        '''Converts Leap coordinates to ROS coordinates by flipping the y and z axes and changing the sign of the y axis.
+        '''Converts Leap coordinates to ROS coordinates.
         Also, the leap coordinates are provided in millimeters, so they are converted to meters.'''
-        new_pos = Point(pos.x/1000, -pos.z/1000, pos.y/1000)
-        new_orientation = Quaternion(orientation.x, - orientation.z, orientation.y, orientation.w)
+        new_pos = Point(- pos.z / 1000.0, - pos.x / 1000.0, pos.y / 1000.0)
+        new_orientation = Quaternion(- orientation.z, - orientation.x, orientation.y, orientation.w)
 
         return new_pos, new_orientation
     

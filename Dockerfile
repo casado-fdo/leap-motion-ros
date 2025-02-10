@@ -22,7 +22,7 @@ SHELL ["/bin/bash", "-c"]
 
 RUN mkdir -p /catkin_ws/src
 WORKDIR /catkin_ws
-COPY ./leap-motion-controller /catkin_ws/src/leap-motion-controller
+COPY ./leap_motion_controller /catkin_ws/src/leap_motion_controller
 
 RUN . /opt/miniforge3/etc/profile.d/conda.sh \
     && . /opt/miniforge3/etc/profile.d/mamba.sh \

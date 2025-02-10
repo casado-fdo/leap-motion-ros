@@ -6,6 +6,7 @@ start:
 	docker run -it --rm --privileged \
 		-e DISPLAY \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-v ./leap_motion_controller:/catkin_ws/src/leap_motion_controller \
 		--net host \
 		-v /dev:/dev \
 		--name lmc lmc:latest \
