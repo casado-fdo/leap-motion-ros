@@ -1,7 +1,7 @@
-# ROS LeapMotion Bridge (2025)
+# ROS LeapMotion Bridge
 
 ## Overview
-This package provides a basic ROS Noetic driver for the LeapMotion controller, leveraging the latest SDK (the only available version in 2025, supported only on Ubuntu 22.04). To ensure compatibility and ease of deployment, both the SDK and the ROS package are fully containerized using Docker.
+This package provides a basic ROS Noetic driver for the LeapMotion controller, leveraging the latest SDK (v5.17, the only available version in 2025, supported only on Ubuntu 22.04). To ensure compatibility and ease of deployment, both the SDK and the ROS package are fully containerized using Docker.
 
 ## Features
 - Publishes LeapMotion hand tracking data to ROS topics (currently only hand pose and grabbing).
