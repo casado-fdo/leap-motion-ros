@@ -61,6 +61,8 @@ Visualization Manager:
         All Enabled: true
         leap_base_link:
           Value: true
+        leap_left_hand:
+          Value: true
         leap_right_hand:
           Value: true
       Marker Alpha: 1
@@ -71,6 +73,8 @@ Visualization Manager:
       Show Names: true
       Tree:
         leap_base_link:
+          leap_left_hand:
+            {}
           leap_right_hand:
             {}
       Update Interval: 0
@@ -89,6 +93,7 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
         leap_left_hand:
           Alpha: 1
           Show Axes: false
@@ -153,7 +158,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.9319329261779785
+      Distance: 1.4323842525482178
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -161,17 +166,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.010564417578279972
-        Y: 0.04350648447871208
-        Z: 0.11206967383623123
+        X: 0.014904681593179703
+        Y: 0.006581745110452175
+        Z: 0.3244320750236511
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.18039828538894653
+      Pitch: 0.3603980243206024
       Target Frame: <Fixed Frame>
-      Yaw: 3.1635818481445312
+      Yaw: 3.143583297729492
     Saved: ~
 Window Geometry:
   Displays:
@@ -190,4 +195,4 @@ Window Geometry:
     collapsed: false
   Width: 2170
   X: 299
-  Y: 342
+  Y: 268
