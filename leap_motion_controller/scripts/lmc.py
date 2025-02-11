@@ -20,6 +20,8 @@ class LeapMotionController(leap.Listener):
         self.pub_right = rospy.Publisher('/leapmotion/hands/right/pose', PoseStamped, queue_size=10)
         self.pub_left_grab = rospy.Publisher('/leapmotion/hands/left/grab', Range, queue_size=10)
         self.pub_right_grab = rospy.Publisher('/leapmotion/hands/right/grab', Range, queue_size=10)
+        self.pub_right_pinch = rospy.Publisher('/leapmotion/hands/right/pinch', Range, queue_size=10)
+        self.pub_left_pinch = rospy.Publisher('/leapmotion/hands/left/pinch', Range, queue_size=10)
 
         # Define a TF link for each hand with base_link as parent
         self.tfBuffer = tf2_ros.Buffer()
@@ -103,13 +105,25 @@ class LeapMotionController(leap.Listener):
                 grab.max_range = 1
                 grab.range = hand.grab_strength
 
+                # Get the hand's pinch strength
+                pinch = Range()
+                pinch.header = Header()
+                pinch.header.frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
+                pinch.header.stamp = time
+                pinch.field_of_view = 1
+                pinch.min_range = 0
+                pinch.max_range = 1
+                pinch.range = hand.pinch_strength
+
                 # Publish hand pose and grab strength
                 if str(hand.type) == "HandType.Left":
                     self.pub_left.publish(ros_pose)
                     self.pub_left_grab.publish(grab)
+                    self.pub_left_pinch.publish(pinch)
                 else:
                     self.pub_right.publish(ros_pose)
                     self.pub_right_grab.publish(grab)
+                    self.pub_right_pinch.publish(pinch)
 
 
 
