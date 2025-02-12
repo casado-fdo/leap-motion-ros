@@ -13,7 +13,7 @@ This package provides a basic ROS Noetic driver for the LeapMotion controller, l
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/casado-fdo/leap-motion-ros.git
-cd leapmotion-docker
+cd leapmotion-motion-ros
 ```
 
 ### 2. Build the Docker Container
@@ -34,8 +34,10 @@ This will start the container and launch the LeapMotion SDK together with the RO
 The following ROS topics will be available:
 - `/leapmotion/hands/right/pose` – Hand tracking data (position and orientation) for the right hand.
 - `/leapmotion/hands/left/pose` – Hand tracking data (position and orientation) for the left hand.
-- `/leapmotion/hands/right/grab` – Value in the range [0.0, 1.0] indicating whether the hand is open (0.0) or closed (1.0).
-- `/leapmotion/hands/left/grab` – Value in the range [0.0, 1.0] indicating whether the hand is open (0.0) or closed (1.0).
+- `/leapmotion/hands/right/grab` – Value in the range [0.0, 1.0] indicating whether the right hand is grabbing (1.0) or not (0.0).
+- `/leapmotion/hands/left/grab` – Value in the range [0.0, 1.0] indicating whether the lefth hand is grabbing (1.0) or not (0.0).
+- `/leapmotion/hands/left/pinch` – Value in the range [0.0, 1.0] indicating whether the right hand is pinching (1.0) or not (0.0).
+- `/leapmotion/hands/left/pinch` – Value in the range [0.0, 1.0] indicating whether the right hand is pinching (1.0) or not (0.0).
 
 ## License
 This project is licensed under the MIT License. See `LICENSE` for details.

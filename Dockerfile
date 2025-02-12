@@ -1,4 +1,4 @@
-FROM docker.io/ripl/ubuntu:22.04-amd64
+FROM personalroboticsimperial/ubuntu:22.04-amd64
 
 
 ARG PROJECT_PATH="/lmc"
