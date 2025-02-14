@@ -1,15 +1,6 @@
 <launch>
-  <!-- Load URDF file -->
-  <param name="leapmotion_description" textfile="$(find leap_motion_controller)/urdf/hands_fix.urdf" />
 
-  <!-- Start the robot_state_publisher -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
-    <remap from="robot_description" to="leapmotion_description" />
-  </node>
-
-  <!-- Start the Leap Node -->
+  <!-- Start the Leap Node (leap motion description should already being published-->
   <node name="lmc" pkg="leap_motion_controller" type="lmc.py"/>
 
-  <!-- Visualisation on Rviz -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
 </launch>
