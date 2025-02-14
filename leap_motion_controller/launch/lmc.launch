@@ -1,9 +1,11 @@
 <launch>
   <!-- Load URDF file -->
-  <param name="robot_description" textfile="$(find leap_motion_controller)/urdf/hands_fix.urdf" />
+  <param name="leapmotion_description" textfile="$(find leap_motion_controller)/urdf/hands_fix.urdf" />
 
   <!-- Start the robot_state_publisher -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
+    <remap from="robot_description" to="leapmotion_description" />
+  </node>
 
   <!-- Start the Leap Node -->
   <node name="lmc" pkg="leap_motion_controller" type="lmc.py"/>
