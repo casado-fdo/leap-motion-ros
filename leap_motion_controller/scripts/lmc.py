@@ -50,9 +50,7 @@ class LeapMotionController(leap.Listener):
 
     def on_tracking_event(self, frame):
         # Get the most recent frame and report some basic information
-        rospy.loginfo('Tracking...')
-
-        print("Frame id: %d, hands: %d" % (
+        rospy.loginfo("Tracking....\nFrame id: %d, hands: %d" % (
               frame.tracking_frame_id, len(frame.hands)))
 
         if len(frame.hands) > 0: #recently changed in API

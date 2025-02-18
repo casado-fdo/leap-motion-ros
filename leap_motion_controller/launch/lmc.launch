@@ -1,6 +1,6 @@
 <launch>
 
   <!-- Start the Leap Node (leap motion description should already being published-->
-  <node name="lmc" pkg="leap_motion_controller" type="lmc.py"/>
+  <node name="lmc" pkg="leap_motion_controller" type="lmc.py" output="screen"/>
 
 </launch>
