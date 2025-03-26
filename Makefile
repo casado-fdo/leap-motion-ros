@@ -1,4 +1,5 @@
 BASE_IP ?= 127.0.0.1
+rviz ?= false
 
 .build:
 	docker build -t lmc:latest -f Dockerfile .
@@ -9,6 +10,7 @@ start:
 		-e DISPLAY \
 		-e ROS_MASTER_URI="http://${BASE_IP}:11311" \
 		-e ROS_IP=${BASE_IP} \
+		-e RVIZ=${rviz} \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v ./leap_motion_controller:/catkin_ws/src/leap_motion_controller \
 		--net host \
