@@ -39,7 +39,7 @@ RUN . /opt/miniforge3/etc/profile.d/conda.sh \
     && pip install leapc-cffi/dist/leapc_cffi-0.0.1.tar.gz \
     && pip install -e leapc-python-api \
     && pip install empy==3.* \
-    && catkin init && catkin build --workspace /catkin_ws
+    && catkin init && catkin build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 --verbose --workspace /catkin_ws
     
 ENV GAZEBO_RESOURCE_PATH=""
 ENV GAZEBO_PLUGIN_PATH=""

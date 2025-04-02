@@ -1,8 +1,11 @@
 BASE_IP ?= 127.0.0.1
-rviz ?= false
+rviz ?= true
 
 .build:
 	docker build -t lmc:latest -f Dockerfile .
+
+.start_if_not_running:
+	@if ! docker ps -a | grep -w lmc; then $(MAKE) start; fi
 
 start:
 	@xhost +si:localuser:root >> /dev/null
@@ -16,6 +19,9 @@ start:
 		--net host \
 		--name lmc lmc:latest \
 		bash -c "leapctl eula -y && leapd & roslaunch leap_motion_controller lmc.launch"
+
+debug: .start_if_not_running
+	docker exec -it lmc bash
 
 stop:
 	docker stop lmc
