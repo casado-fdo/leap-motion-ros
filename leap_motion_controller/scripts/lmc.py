@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import leap
 import rospy
-import tf2_ros
-from geometry_msgs.msg import Point, Quaternion, Pose, TransformStamped
+from geometry_msgs.msg import Point, Quaternion, Pose
 from sensor_msgs.msg import Range
 from std_msgs.msg import Header
 from leap_motion_controller.msg import Hand, Finger, Bone
@@ -12,10 +11,13 @@ DEFAULT_BASE_LINK = 'leap_base_link'
 class LeapMotionController(leap.Listener):
     def __init__(self):
         super().__init__()
+        
         rospy.init_node('lmc')
-        self.base_link = rospy.get_param('~base_link', DEFAULT_BASE_LINK)
+
         self.left_link = "leap_left_hand"
         self.right_link = "leap_right_hand"
+        self.base_link = rospy.get_param('~base_link', DEFAULT_BASE_LINK)
+
         self.pub_left = rospy.Publisher('/leapmotion/hands/left', Hand, queue_size=1)
         self.pub_right = rospy.Publisher('/leapmotion/hands/right', Hand, queue_size=1)
         self.pub_left_grab = rospy.Publisher('/leapmotion/hands/left/grab', Range, queue_size=1)
@@ -23,17 +25,13 @@ class LeapMotionController(leap.Listener):
         self.pub_right_pinch = rospy.Publisher('/leapmotion/hands/right/pinch', Range, queue_size=1)
         self.pub_left_pinch = rospy.Publisher('/leapmotion/hands/left/pinch', Range, queue_size=1)
 
-        # Define a TF link for each hand with base_link as parent
-        self.tfBuffer = tf2_ros.Buffer()
-        self.tfListener = tf2_ros.TransformListener(self.tfBuffer)
-        self.tfBroadcaster = tf2_ros.TransformBroadcaster()
-
         rospy.loginfo('LeapMotionController Node is Up!')
         connection = leap.Connection()
         connection.add_listener(self)
         with connection.open():
             connection.set_tracking_mode(leap.TrackingMode.Desktop)
             rospy.spin()
+
 
     def leap_to_ros_coords(self, position=None, orientation=None):
         '''Converts Leap coordinates to ROS coordinates.
@@ -75,15 +73,6 @@ class LeapMotionController(leap.Listener):
                 # Convert from Leap coordinates (right-handed Cartesian coordinate system, Y-axis up) to ROS coordinates (left-handed Cartesian coordinate system, Z-axis up
                 pos, orientation = self.leap_to_ros_coords(pos, orientation)
 
-                # Broadcast the hand's pose as a TF frame
-                t = TransformStamped()
-                t.header.stamp = time
-                t.header.frame_id = self.base_link
-                t.child_frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
-                t.transform.translation = pos
-                t.transform.rotation = orientation
-                self.tfBroadcaster.sendTransform(t)
-
                 # Create a Pose message for the hand's palm center
                 palm_pose = Pose()
                 palm_pose.position = pos
@@ -123,6 +112,7 @@ class LeapMotionController(leap.Listener):
         else:
             return None
         
+
     def get_grab_range_msg(self, hand, time):
         grab = Range()
         grab.header = Header()
@@ -134,6 +124,7 @@ class LeapMotionController(leap.Listener):
         grab.range = hand.grab_strength
         return grab
     
+
     def get_pinch_range_msg(self, hand, time):
         pinch = Range()
         pinch.header = Header()
@@ -145,6 +136,7 @@ class LeapMotionController(leap.Listener):
         pinch.range = hand.pinch_strength
         return pinch
     
+
     def get_finger_list(self, hand, header):
         finger_list = []
         # Iterate through the fingers
@@ -163,6 +155,7 @@ class LeapMotionController(leap.Listener):
         
         return finger_list
     
+
     def get_bone_list(self, finger, header):
         bone_list = []
         # Iterate through the bones of the finger
@@ -178,7 +171,6 @@ class LeapMotionController(leap.Listener):
             bone_list.append(bone_msg)
 
         return bone_list
-
 
 
 if __name__ == '__main__':

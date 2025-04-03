@@ -5,6 +5,8 @@
 
   <!-- Start the Leap Node -->
   <node name="lmc" pkg="leap_motion_controller" type="lmc.py" output="$(arg output)"/>
+  <!-- Start the TF broadcaster -->
+  <node name="lmc_tf" pkg="leap_motion_controller" type="tf_broadcaster.py" output="$(arg output)"/>
 
   <group if="$(arg rviz)">
     <!-- Load URDF file -->
@@ -15,7 +17,6 @@
     <node name="lmc_skeleton_marker" pkg="leap_motion_controller" type="skeleton_visualiser.py"/>
     <!-- Visualisation on Rviz -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
-
   </group>
 
 

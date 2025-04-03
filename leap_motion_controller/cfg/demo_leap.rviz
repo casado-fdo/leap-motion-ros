@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
         - /Left Hand1
         - /Right Hand1
       Splitter Ratio: 0.5
@@ -60,50 +61,181 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        index_joint_0:
-          Value: true
-        index_joint_1:
-          Value: true
         leap_base_link:
+          Value: true
+        leap_left_f0_j0:
+          Value: true
+        leap_left_f0_j1:
+          Value: true
+        leap_left_f0_j2:
+          Value: true
+        leap_left_f0_j3:
+          Value: true
+        leap_left_f1_j0:
+          Value: true
+        leap_left_f1_j1:
+          Value: true
+        leap_left_f1_j2:
+          Value: true
+        leap_left_f1_j3:
+          Value: true
+        leap_left_f2_j0:
+          Value: true
+        leap_left_f2_j1:
+          Value: true
+        leap_left_f2_j2:
+          Value: true
+        leap_left_f2_j3:
+          Value: true
+        leap_left_f3_j0:
+          Value: true
+        leap_left_f3_j1:
+          Value: true
+        leap_left_f3_j2:
+          Value: true
+        leap_left_f3_j3:
+          Value: true
+        leap_left_f4_j0:
+          Value: true
+        leap_left_f4_j1:
+          Value: true
+        leap_left_f4_j2:
+          Value: true
+        leap_left_f4_j3:
+          Value: true
+        leap_left_hand:
+          Value: true
+        leap_right_f0_j0:
+          Value: true
+        leap_right_f0_j1:
+          Value: true
+        leap_right_f0_j2:
+          Value: true
+        leap_right_f0_j3:
+          Value: true
+        leap_right_f1_j0:
+          Value: true
+        leap_right_f1_j1:
+          Value: true
+        leap_right_f1_j2:
+          Value: true
+        leap_right_f1_j3:
+          Value: true
+        leap_right_f2_j0:
+          Value: true
+        leap_right_f2_j1:
+          Value: true
+        leap_right_f2_j2:
+          Value: true
+        leap_right_f2_j3:
+          Value: true
+        leap_right_f3_j0:
+          Value: true
+        leap_right_f3_j1:
+          Value: true
+        leap_right_f3_j2:
+          Value: true
+        leap_right_f3_j3:
+          Value: true
+        leap_right_f4_j0:
+          Value: true
+        leap_right_f4_j1:
+          Value: true
+        leap_right_f4_j2:
+          Value: true
+        leap_right_f4_j3:
           Value: true
         leap_right_hand:
           Value: true
-        middle_joint_0:
-          Value: true
-        middle_joint_1:
-          Value: true
-        pinky_joint_0:
-          Value: true
-        pinky_joint_1:
-          Value: true
-        ring_joint_0:
-          Value: true
-        ring_joint_1:
-          Value: true
-        thumb_joint_0:
-          Value: true
       Marker Alpha: 1
-      Marker Scale: 0.4000000059604645
+      Marker Scale: 0.20000000298023224
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
         leap_base_link:
+          leap_left_hand:
+            leap_left_f0_j0:
+              {}
+            leap_left_f0_j1:
+              {}
+            leap_left_f0_j2:
+              {}
+            leap_left_f0_j3:
+              {}
+            leap_left_f1_j0:
+              {}
+            leap_left_f1_j1:
+              {}
+            leap_left_f1_j2:
+              {}
+            leap_left_f1_j3:
+              {}
+            leap_left_f2_j0:
+              {}
+            leap_left_f2_j1:
+              {}
+            leap_left_f2_j2:
+              {}
+            leap_left_f2_j3:
+              {}
+            leap_left_f3_j0:
+              {}
+            leap_left_f3_j1:
+              {}
+            leap_left_f3_j2:
+              {}
+            leap_left_f3_j3:
+              {}
+            leap_left_f4_j0:
+              {}
+            leap_left_f4_j1:
+              {}
+            leap_left_f4_j2:
+              {}
+            leap_left_f4_j3:
+              {}
           leap_right_hand:
-            index_joint_0:
-              index_joint_1:
-                {}
-            middle_joint_0:
-              middle_joint_1:
-                {}
-            pinky_joint_0:
-              pinky_joint_1:
-                {}
-            ring_joint_0:
-              ring_joint_1:
-                {}
-            thumb_joint_0:
+            leap_right_f0_j0:
+              {}
+            leap_right_f0_j1:
+              {}
+            leap_right_f0_j2:
+              {}
+            leap_right_f0_j3:
+              {}
+            leap_right_f1_j0:
+              {}
+            leap_right_f1_j1:
+              {}
+            leap_right_f1_j2:
+              {}
+            leap_right_f1_j3:
+              {}
+            leap_right_f2_j0:
+              {}
+            leap_right_f2_j1:
+              {}
+            leap_right_f2_j2:
+              {}
+            leap_right_f2_j3:
+              {}
+            leap_right_f3_j0:
+              {}
+            leap_right_f3_j1:
+              {}
+            leap_right_f3_j2:
+              {}
+            leap_right_f3_j3:
+              {}
+            leap_right_f4_j0:
+              {}
+            leap_right_f4_j1:
+              {}
+            leap_right_f4_j2:
+              {}
+            leap_right_f4_j3:
               {}
       Update Interval: 0
       Value: true
@@ -150,7 +282,8 @@ Visualization Manager:
           Marker Topic: /leapmotion/hands/left/marker
           Name: Left Skeleton
           Namespaces:
-            {}
+            hand_joints: true
+            hand_skeleton: true
           Queue Size: 100
           Value: true
       Enabled: true
@@ -216,7 +349,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.2716290950775146
+      Distance: 0.630239725112915
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -253,4 +386,4 @@ Window Geometry:
     collapsed: false
   Width: 2052
   X: 266
-  Y: 244
+  Y: 96
