@@ -16,12 +16,12 @@ class LeapMotionController(leap.Listener):
         self.base_link = rospy.get_param('~base_link', DEFAULT_BASE_LINK)
         self.left_link = "leap_left_hand"
         self.right_link = "leap_right_hand"
-        self.pub_left = rospy.Publisher('/leapmotion/hands/left', Hand, queue_size=2)
-        self.pub_right = rospy.Publisher('/leapmotion/hands/right', Hand, queue_size=2)
-        self.pub_left_grab = rospy.Publisher('/leapmotion/hands/left/grab', Range, queue_size=2)
-        self.pub_right_grab = rospy.Publisher('/leapmotion/hands/right/grab', Range, queue_size=2)
-        self.pub_right_pinch = rospy.Publisher('/leapmotion/hands/right/pinch', Range, queue_size=2)
-        self.pub_left_pinch = rospy.Publisher('/leapmotion/hands/left/pinch', Range, queue_size=2)
+        self.pub_left = rospy.Publisher('/leapmotion/hands/left', Hand, queue_size=1)
+        self.pub_right = rospy.Publisher('/leapmotion/hands/right', Hand, queue_size=1)
+        self.pub_left_grab = rospy.Publisher('/leapmotion/hands/left/grab', Range, queue_size=1)
+        self.pub_right_grab = rospy.Publisher('/leapmotion/hands/right/grab', Range, queue_size=1)
+        self.pub_right_pinch = rospy.Publisher('/leapmotion/hands/right/pinch', Range, queue_size=1)
+        self.pub_left_pinch = rospy.Publisher('/leapmotion/hands/left/pinch', Range, queue_size=1)
 
         # Define a TF link for each hand with base_link as parent
         self.tfBuffer = tf2_ros.Buffer()
@@ -80,24 +80,14 @@ class LeapMotionController(leap.Listener):
                 t.header.stamp = time
                 t.header.frame_id = self.base_link
                 t.child_frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
-                t.transform.translation.x = pos.x 
-                t.transform.translation.y = pos.y 
-                t.transform.translation.z = pos.z 
-                t.transform.rotation.x = orientation.x
-                t.transform.rotation.y = orientation.y
-                t.transform.rotation.z = orientation.z
-                t.transform.rotation.w = orientation.w
+                t.transform.translation = pos
+                t.transform.rotation = orientation
                 self.tfBroadcaster.sendTransform(t)
 
                 # Create a Pose message for the hand's palm center
                 palm_pose = Pose()
-                palm_pose.position.x = pos.x 
-                palm_pose.position.y = pos.y 
-                palm_pose.position.z = pos.z 
-                palm_pose.orientation.x = orientation.x
-                palm_pose.orientation.y = orientation.y
-                palm_pose.orientation.z = orientation.z
-                palm_pose.orientation.w = orientation.w
+                palm_pose.position = pos
+                palm_pose.orientation = orientation
                 
                 # Add the palm pose, normal, and direction to the hand message
                 hand_msg.palm_center = palm_pose
@@ -107,56 +97,13 @@ class LeapMotionController(leap.Listener):
                 hand_msg.pinch_strength = hand.pinch_strength
 
                 # Get the hand's grab strength
-                grab = Range()
-                grab.header = Header()
-                grab.header.frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
-                grab.header.stamp = time
-                grab.field_of_view = 1
-                grab.min_range = 0
-                grab.max_range = 1
-                grab.range = hand.grab_strength
+                grab = self.get_grab_range_msg(hand, time)
 
                 # Get the hand's pinch strength
-                pinch = Range()
-                pinch.header = Header()
-                pinch.header.frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
-                pinch.header.stamp = time
-                pinch.field_of_view = 1
-                pinch.min_range = 0
-                pinch.max_range = 1
-                pinch.range = hand.pinch_strength
+                pinch = self.get_pinch_range_msg(hand, time)
 
-                finger_list = []
-                # Iterate through the fingers
-                for index_digit in range(0, 5):
-                    finger = hand.digits[index_digit]
-                    
-                    finger_msg = Finger()
-                    finger_msg.header = hand_msg.header
-                    finger_msg.type = index_digit
-
-                    bones_list = []
-                    # Iterate through the bones of the finger
-                    for index_bone in range(0, 4):
-                        bone = finger.bones[index_bone]
-
-                        bone_msg = Bone()
-                        bone_msg.header = hand_msg.header
-                        bone_msg.type = index_bone
-                        bone_msg.bone_start =  self.get_joint_position(bone.prev_joint)
-                        bone_msg.bone_end = self.get_joint_position(bone.next_joint)
-
-                        bones_list.append(bone_msg)
-                    
-                    # Add the bones to the finger message
-                    finger_msg.bone_list = bones_list
-
-                    # Add the finger to the finger list
-                    finger_list.append(finger_msg)
-                
                 # Add the fingers to the hand message
-                hand_msg.finger_list = finger_list
-
+                hand_msg.finger_list = self.get_finger_list(hand, hand_msg.header)
 
                 # Publish hand pose and grab strength
                 if str(hand.type) == "HandType.Left":
@@ -175,6 +122,62 @@ class LeapMotionController(leap.Listener):
             return pos
         else:
             return None
+        
+    def get_grab_range_msg(self, hand, time):
+        grab = Range()
+        grab.header = Header()
+        grab.header.frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
+        grab.header.stamp = time
+        grab.field_of_view = 1
+        grab.min_range = 0
+        grab.max_range = 1
+        grab.range = hand.grab_strength
+        return grab
+    
+    def get_pinch_range_msg(self, hand, time):
+        pinch = Range()
+        pinch.header = Header()
+        pinch.header.frame_id = self.left_link if str(hand.type) == "HandType.Left" else self.right_link
+        pinch.header.stamp = time
+        pinch.field_of_view = 1
+        pinch.min_range = 0
+        pinch.max_range = 1
+        pinch.range = hand.pinch_strength
+        return pinch
+    
+    def get_finger_list(self, hand, header):
+        finger_list = []
+        # Iterate through the fingers
+        for index_digit in range(0, 5):
+            finger = hand.digits[index_digit]
+            
+            finger_msg = Finger()
+            finger_msg.header = header
+            finger_msg.type = index_digit
+
+            # Add the bones to the finger message
+            finger_msg.bone_list = self.get_bone_list(finger, header)
+
+            # Add the finger to the finger list
+            finger_list.append(finger_msg)
+        
+        return finger_list
+    
+    def get_bone_list(self, finger, header):
+        bone_list = []
+        # Iterate through the bones of the finger
+        for index_bone in range(0, 4):
+            bone = finger.bones[index_bone]
+
+            bone_msg = Bone()
+            bone_msg.header = header
+            bone_msg.type = index_bone
+            bone_msg.bone_start =  self.get_joint_position(bone.prev_joint)
+            bone_msg.bone_end = self.get_joint_position(bone.next_joint)
+
+            bone_list.append(bone_msg)
+
+        return bone_list
 
 
 

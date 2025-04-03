@@ -54,12 +54,34 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Filter (blacklist): ""
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        index_joint_0:
+          Value: true
+        index_joint_1:
+          Value: true
+        leap_base_link:
+          Value: true
+        leap_right_hand:
+          Value: true
+        middle_joint_0:
+          Value: true
+        middle_joint_1:
+          Value: true
+        pinky_joint_0:
+          Value: true
+        pinky_joint_1:
+          Value: true
+        ring_joint_0:
+          Value: true
+        ring_joint_1:
+          Value: true
+        thumb_joint_0:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 0.4000000059604645
       Name: TF
@@ -67,9 +89,24 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        leap_base_link:
+          leap_right_hand:
+            index_joint_0:
+              index_joint_1:
+                {}
+            middle_joint_0:
+              middle_joint_1:
+                {}
+            pinky_joint_0:
+              pinky_joint_1:
+                {}
+            ring_joint_0:
+              ring_joint_1:
+                {}
+            thumb_joint_0:
+              {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -113,8 +150,7 @@ Visualization Manager:
           Marker Topic: /leapmotion/hands/left/marker
           Name: Left Skeleton
           Namespaces:
-            hand_joints: true
-            hand_skeleton: true
+            {}
           Queue Size: 100
           Value: true
       Enabled: true
@@ -217,4 +253,4 @@ Window Geometry:
     collapsed: false
   Width: 2052
   X: 266
-  Y: 281
+  Y: 244

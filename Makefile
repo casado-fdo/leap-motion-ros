@@ -1,5 +1,5 @@
 BASE_IP ?= 127.0.0.1
-rviz ?= true
+rviz ?= false
 
 .build:
 	docker build -t lmc:latest -f Dockerfile .
