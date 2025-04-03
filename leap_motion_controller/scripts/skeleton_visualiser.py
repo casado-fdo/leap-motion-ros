@@ -39,6 +39,7 @@ class SkeletonVisualizer:
         bone_marker.color.g = 1.0
         bone_marker.color.b = 1.0
         bone_marker.color.a = 1.0  # Fully visible
+        bone_marker.pose.orientation.w = 1.0
 
         # Create point markers (for joints)
         point_marker = Marker()
@@ -55,6 +56,7 @@ class SkeletonVisualizer:
         point_marker.color.g = color[1]
         point_marker.color.b = color[2]
         point_marker.color.a = color[3]
+        point_marker.pose.orientation.w = 1.0  # No rotation
 
         # Add bones and joints
         for finger in hand_msg.finger_list:
