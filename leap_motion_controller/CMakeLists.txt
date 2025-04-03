@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
-cmake_policy(SET CMP0148 OLD)
+cmake_minimum_required(VERSION 3.0.2)
 project(leap_motion_controller)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
