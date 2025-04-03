@@ -11,7 +11,7 @@ DEFAULT_BASE_LINK = 'leap_base_link'
 class LeapMotionController(leap.Listener):
     def __init__(self):
         super().__init__()
-        
+
         rospy.init_node('lmc')
 
         self.left_link = "leap_left_hand"
@@ -146,6 +146,7 @@ class LeapMotionController(leap.Listener):
             finger_msg = Finger()
             finger_msg.header = header
             finger_msg.type = index_digit
+            finger_msg.is_extended = finger.is_extended
 
             # Add the bones to the finger message
             finger_msg.bone_list = self.get_bone_list(finger, header)
