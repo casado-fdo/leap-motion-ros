@@ -1,4 +1,5 @@
 <launch>
+  <arg name="markers" default="$(optenv MARKERS true)"/>
   <arg name="rviz" default="$(optenv RVIZ false)"/> 
   <arg name="verbose" default="true"/>
   <arg name="output" default="screen" if="$(arg verbose)"/>
@@ -8,16 +9,18 @@
   <!-- Start the TF broadcaster -->
   <node name="lmc_tf" pkg="leap_motion_controller" type="tf_broadcaster.py" output="$(arg output)"/>
 
-  <group if="$(arg rviz)">
+  <group if="$(arg markers)">
+    <!-- Start the marker publisher node -->
+    <node name="lmc_skeleton_marker" pkg="leap_motion_controller" type="skeleton_visualiser.py"/>
+  </group>
+
+  <group if="$(eval rviz and markers)">
     <!-- Load URDF file -->
     <param name="robot_description" textfile="$(find leap_motion_controller)/urdf/hands_fix.urdf" />
     <!-- Start the robot_state_publisher -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <!-- Start the marker publisher node -->
-    <node name="lmc_skeleton_marker" pkg="leap_motion_controller" type="skeleton_visualiser.py"/>
     <!-- Visualisation on Rviz -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
   </group>
-
 
 </launch>
