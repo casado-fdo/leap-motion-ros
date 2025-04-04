@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="leap_hands">
+  
+  <!-- Base link -->
+  <link name="leap_base_link">
+    <!-- Display sensor range bounding box -->
+    <visual>
+      <origin xyz="0 0 0.35" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.7 0.8 0.7"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.8 0.8 0.8 0.3"/>
+      </material>
+    </visual>
+  </link>
+  
+</robot>

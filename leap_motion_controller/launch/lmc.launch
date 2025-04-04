@@ -16,7 +16,7 @@
 
   <group if="$(eval rviz and markers)">
     <!-- Load URDF file -->
-    <param name="robot_description" textfile="$(find leap_motion_controller)/urdf/hands_fix.urdf" />
+    <param name="robot_description" textfile="$(find leap_motion_controller)/urdf/leap_bbox.urdf" />
     <!-- Start the robot_state_publisher -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <!-- Visualisation on Rviz -->
