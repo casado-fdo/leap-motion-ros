@@ -1,4 +1,5 @@
-BASE_IP ?= 127.0.0.1
+base_ip ?= 127.0.0.1
+base_link ?= base_link
 markers ?= true
 rviz ?= false
 
@@ -12,10 +13,11 @@ start:
 	@xhost +si:localuser:root >> /dev/null
 	docker run -it --rm --privileged \
 		-e DISPLAY \
-		-e ROS_MASTER_URI="http://${BASE_IP}:11311" \
-		-e ROS_IP=${BASE_IP} \
+		-e ROS_MASTER_URI="http://${base_ip}:11311" \
+		-e ROS_IP=${base_ip} \
 		-e MARKERS=${markers} \
 		-e RVIZ=${rviz} \
+		-e BASE_LINK=${base_link} \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v ./leap_motion_controller:/catkin_ws/src/leap_motion_controller \
 		--net host \

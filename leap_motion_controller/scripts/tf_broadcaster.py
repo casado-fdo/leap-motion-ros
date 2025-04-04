@@ -16,7 +16,7 @@ class HandTfBroadcaster:
         self.left_hand_sub = rospy.Subscriber('/leapmotion/hands/left', Hand, self.left_hand_callback, queue_size=1)
         self.right_hand_sub = rospy.Subscriber('/leapmotion/hands/right', Hand, self.right_hand_callback, queue_size=1)
 
-        self.base_link = rospy.get_param('~base_link', DEFAULT_BASE_LINK)
+        self.base_link = rospy.get_param('base_link', DEFAULT_BASE_LINK)
         self.left_link = "leap_left_hand"
         self.right_link = "leap_right_hand"
 

@@ -5,10 +5,12 @@ from visualization_msgs.msg import MarkerArray, Marker
 from geometry_msgs.msg import Point
 from leap_motion_controller.msg import Hand
 
+DEFAULT_BASE_LINK = 'leap_base_link'
 
 class SkeletonVisualizer:
     def __init__(self):
         rospy.init_node('hand_visualizer')
+        self.base_link = rospy.get_param('base_link', DEFAULT_BASE_LINK)
         self.left_hand_pub = rospy.Publisher('/leapmotion/hands/left/marker', MarkerArray, queue_size=10)
         self.right_hand_pub = rospy.Publisher('/leapmotion/hands/right/marker', MarkerArray, queue_size=10)
         self.left_hand_sub = rospy.Subscriber('/leapmotion/hands/left', Hand, self.left_hand_callback)
@@ -28,7 +30,7 @@ class SkeletonVisualizer:
 
         # Create line markers (for bones)
         bone_marker = Marker()
-        bone_marker.header.frame_id = "leap_base_link"
+        bone_marker.header.frame_id = self.base_link
         bone_marker.header.stamp = rospy.Time.now()
         bone_marker.ns = "hand_skeleton"
         bone_marker.id = marker_id
@@ -43,7 +45,7 @@ class SkeletonVisualizer:
 
         # Create point markers (for joints)
         point_marker = Marker()
-        point_marker.header.frame_id = "leap_base_link"
+        point_marker.header.frame_id = self.base_link
         point_marker.header.stamp = rospy.Time.now()
         point_marker.ns = "hand_joints"
         point_marker.id = marker_id + 1

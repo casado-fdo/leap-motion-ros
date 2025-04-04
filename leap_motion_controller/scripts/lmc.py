@@ -16,7 +16,7 @@ class LeapMotionController(leap.Listener):
 
         self.left_link = "leap_left_hand"
         self.right_link = "leap_right_hand"
-        self.base_link = rospy.get_param('~base_link', DEFAULT_BASE_LINK)
+        self.base_link = rospy.get_param('base_link', DEFAULT_BASE_LINK)
 
         self.pub_left = rospy.Publisher('/leapmotion/hands/left', Hand, queue_size=1)
         self.pub_right = rospy.Publisher('/leapmotion/hands/right', Hand, queue_size=1)
