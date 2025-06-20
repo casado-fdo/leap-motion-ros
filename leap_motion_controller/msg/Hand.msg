@@ -19,8 +19,11 @@ float32 grab_strength
 # The distance between the thumb and index finger of a pinch hand pose. 
 float32 pinch_strength
 
-# The center position of the palm
+# The palm pose (i.e., position and orientation of the center of the hand)
 geometry_msgs/Pose palm_center
+
+# The palm pose after applying an exponential smoothing filter
+geometry_msgs/Pose palm_center_filtered
 
 # A list of fingers and gestures associated with this hand
 Finger[] finger_list

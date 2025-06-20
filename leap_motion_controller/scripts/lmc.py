@@ -5,8 +5,7 @@ from geometry_msgs.msg import Point, Quaternion, Pose
 from sensor_msgs.msg import Range
 from std_msgs.msg import Header
 from leap_motion_controller.msg import Hand, Finger, Bone
-
-DEFAULT_BASE_LINK = 'leap_base_link'
+ 
 
 class LeapMotionController(leap.Listener):
     def __init__(self):
@@ -16,7 +15,8 @@ class LeapMotionController(leap.Listener):
 
         self.left_link = "leap_left_hand"
         self.right_link = "leap_right_hand"
-        self.base_link = rospy.get_param('base_link', DEFAULT_BASE_LINK)
+        self.base_link = rospy.get_param('base_link', 'leap_base_link')
+        self.palm_pose_smooth_factor = rospy.get_param('smoothing_factor', 0.99)
 
         self.pub_left = rospy.Publisher('/leapmotion/hands/left', Hand, queue_size=1)
         self.pub_right = rospy.Publisher('/leapmotion/hands/right', Hand, queue_size=1)
@@ -24,6 +24,13 @@ class LeapMotionController(leap.Listener):
         self.pub_right_grab = rospy.Publisher('/leapmotion/hands/right/grab', Range, queue_size=1)
         self.pub_right_pinch = rospy.Publisher('/leapmotion/hands/right/pinch', Range, queue_size=1)
         self.pub_left_pinch = rospy.Publisher('/leapmotion/hands/left/pinch', Range, queue_size=1)
+
+        self.last_palm_pose_right = Pose()
+        self.last_palm_pose_right.position = Point(0, 0, 0)
+        self.last_palm_pose_right.orientation = Quaternion(0, 0, 0, 1)
+        self.last_palm_pose_left = Pose()
+        self.last_palm_pose_left.position = Point(0, 0, 0)
+        self.last_palm_pose_left.orientation = Quaternion(0, 0, 0, 1)
 
         rospy.loginfo('LeapMotionController Node is Up!')
         connection = leap.Connection()
@@ -78,8 +85,14 @@ class LeapMotionController(leap.Listener):
                 palm_pose.position = pos
                 palm_pose.orientation = orientation
                 
+                # Provide a filtered palm pose applying an exponential smoothing filter
+                last_pose = self.last_palm_pose_left if str(hand.type) == "HandType.Left" else self.last_palm_pose_right
+                palm_pose_filtered = self.exponential_smoothing(palm_pose, last_pose, self.palm_pose_smooth_factor)
+                
+                
                 # Add the palm pose, normal, and direction to the hand message
                 hand_msg.palm_center = palm_pose
+                hand_msg.palm_center_filtered = palm_pose_filtered
                 hand_msg.normal= hand.palm.normal
                 hand_msg.direction = hand.palm.direction
                 hand_msg.grab_strength = hand.grab_strength
@@ -99,10 +112,12 @@ class LeapMotionController(leap.Listener):
                     self.pub_left.publish(hand_msg)
                     self.pub_left_grab.publish(grab)
                     self.pub_left_pinch.publish(pinch)
+                    self.last_palm_pose_left = palm_pose_filtered
                 else:
                     self.pub_right.publish(hand_msg)
                     self.pub_right_grab.publish(grab)
                     self.pub_right_pinch.publish(pinch)
+                    self.last_palm_pose_right = palm_pose_filtered
 
 
     def get_joint_position(self, bone):
@@ -172,6 +187,20 @@ class LeapMotionController(leap.Listener):
             bone_list.append(bone_msg)
 
         return bone_list
+    
+
+    def exponential_smoothing(self, current_pose, last_pose, smooth_factor):
+        """Applies an exponential smoothing filter to the current pose."""
+        filtered_pose = Pose()
+        filtered_pose.position.x = smooth_factor * last_pose.position.x + (1 - smooth_factor) * current_pose.position.x
+        filtered_pose.position.y = smooth_factor * last_pose.position.y + (1 - smooth_factor) * current_pose.position.y
+        filtered_pose.position.z = smooth_factor * last_pose.position.z + (1 - smooth_factor) * current_pose.position.z
+        filtered_pose.orientation.x = smooth_factor * last_pose.orientation.x + (1 - smooth_factor) * current_pose.orientation.x
+        filtered_pose.orientation.y = smooth_factor * last_pose.orientation.y + (1 - smooth_factor) * current_pose.orientation.y
+        filtered_pose.orientation.z = smooth_factor * last_pose.orientation.z + (1 - smooth_factor) * current_pose.orientation.z
+        filtered_pose.orientation.w = smooth_factor * last_pose.orientation.w + (1 - smooth_factor) * current_pose.orientation.w
+
+        return filtered_pose
 
 
 if __name__ == '__main__':

@@ -34,13 +34,13 @@ make start rviz:=true
 ```
 
 ### ROS Topics
-The following ROS topics will be available:
-- `/leapmotion/hands/right` – Hand tracking data for the right hand. This includes hand poses (position and orientation) for the palm center and each finger and bone. Please check [`msg/Hand.msg`](leap_motion_controller/msg/Hand.msg) for further details.
-- `/leapmotion/hands/left` – Same as above but for the left hand.
-- `/leapmotion/hands/right/grab` – Value in the range [0.0, 1.0] indicating whether the right hand is grabbing (1.0) or not (0.0).
-- `/leapmotion/hands/left/grab` – Same as above but for the left hand.
-- `/leapmotion/hands/left/pinch` – Value in the range [0.0, 1.0] indicating whether the right hand is pinching (1.0) or not (0.0).
-- `/leapmotion/hands/left/pinch` – Same as above but for the left hand.
+The following ROS topics will be available (with `{hand}` replaced by `left` or `right`):
+
+* `/leapmotion/hands/{hand}` – Hand tracking data. Includes hand poses (position and orientation) for the palm centre, as well as each finger and bone. See [`msg/Hand.msg`](leap_motion_controller/msg/Hand.msg) for further details.
+* `/leapmotion/hands/{hand}/grab` – Value in the range \[0.0, 1.0] indicating the grab state of the hand (1.0 = fully grabbing, 0.0 = open).
+* `/leapmotion/hands/{hand}/pinch` – Value in the range \[0.0, 1.0] indicating the pinch state of the hand (1.0 = fully pinching, 0.0 = open).
+* `/leapmotion/hands/{hand}/markers` – `MarkerArray` for visualising the hand skeleton in Rviz.
+
 
 ## License
 This project is licensed under the MIT License. See `LICENSE` for details.
