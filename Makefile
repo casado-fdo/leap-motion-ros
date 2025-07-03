@@ -1,4 +1,5 @@
-base_ip ?= 127.0.0.1
+ros_master_uri ?= http://127.0.1:11311
+ros_ip ?= 127.0.0.1
 base_link ?= base_link
 markers ?= true
 rviz ?= false
@@ -13,8 +14,8 @@ start:
 	@xhost +si:localuser:root >> /dev/null
 	docker run -it --rm --privileged \
 		-e DISPLAY \
-		-e ROS_MASTER_URI="http://${base_ip}:11311" \
-		-e ROS_IP=${base_ip} \
+		-e ROS_MASTER_URI="http://${ros_master_uri}:11311" \
+		-e ROS_IP=${ros_ip} \
 		-e MARKERS=${markers} \
 		-e RVIZ=${rviz} \
 		-e BASE_LINK=${base_link} \
