@@ -14,7 +14,7 @@ start:
 	@xhost +si:localuser:root >> /dev/null
 	docker run -it --rm --privileged \
 		-e DISPLAY \
-		-e ROS_MASTER_URI="http://${ros_master_uri}:11311" \
+		-e ROS_MASTER_URI=${ros_master_uri} \
 		-e ROS_IP=${ros_ip} \
 		-e MARKERS=${markers} \
 		-e RVIZ=${rviz} \
