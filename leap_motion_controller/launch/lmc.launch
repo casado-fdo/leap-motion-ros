@@ -22,10 +22,8 @@
   <group if="$(eval rviz and markers)">
     <!-- Load URDF file -->
     <param name="robot_description" textfile="$(find leap_motion_controller)/urdf/leap_bbox.urdf" />
-    <!-- Start the robot_state_publisher -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <!-- Visualisation on Rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
+    <node name="leap_motion_rviz" pkg="rviz" type="rviz" args="-d $(find leap_motion_controller)/cfg/demo_leap.rviz" />
   </group>
 
 </launch>
