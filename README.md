@@ -53,3 +53,7 @@ Available ROS topics (replace `{hand}` with `left` or `right`):
 
 ## License
 This project is licensed under the MIT License. See `LICENSE` for details.
+
+
+## Acknowledgments
+Developed at the Personal Robotics Laboratory, Imperial College London (2025).
