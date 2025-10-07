@@ -27,3 +27,6 @@ geometry_msgs/Pose palm_center_filtered
 
 # A list of fingers and gestures associated with this hand
 Finger[] finger_list
+
+# The same list of fingers but after applying an exponential smoothing filter
+Finger[] finger_list_filtered

@@ -4,10 +4,12 @@
   <arg name="rviz"                  default="$(optenv RVIZ false)"/> 
   <arg name="verbose"               default="true"/>
   <arg name="output"                default="screen" if="$(arg verbose)"/>
-  <arg name="pose_smoothing_factor" default="0.99"/>
+  <arg name="pose_smooth_factor"    default="0.99"/>
+  <arg name="bones_smooth_factor"   default="0.98"/>
 
-  <param name="base_link"        value="$(arg base_link)"/>
-  <param name="smoothing_factor" value="$(arg pose_smoothing_factor)"/>
+  <param name="base_link"           value="$(arg base_link)"/>
+  <param name="palm_smooth_factor"  value="$(arg pose_smooth_factor)"/>
+  <param name="bones_smooth_factor" value="$(arg bones_smooth_factor)"/>
 
   <!-- Start the Leap Node -->
   <node name="lmc" pkg="leap_motion_controller" type="lmc.py" output="$(arg output)"/>
