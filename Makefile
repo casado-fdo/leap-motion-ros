@@ -1,6 +1,8 @@
 ros_master_uri ?= http://127.0.1:11311
 ros_ip ?= 127.0.0.1
 base_link ?= base_link
+pose_smooth_factor ?= 0.95
+bones_smooth_factor ?= 0.95
 markers ?= true
 rviz ?= false
 
@@ -19,6 +21,8 @@ start:
 		-e MARKERS=${markers} \
 		-e RVIZ=${rviz} \
 		-e BASE_LINK=${base_link} \
+		-e POSE_SMOOTH_FACTOR=${pose_smooth_factor} \
+		-e BONES_SMOOTH_FACTOR=${bones_smooth_factor} \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v ./leap_motion_controller:/catkin_ws/src/leap_motion_controller \
 		--net host \
