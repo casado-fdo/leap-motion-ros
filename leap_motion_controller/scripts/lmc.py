@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import leap
 import rospy
 from geometry_msgs.msg import Point, Quaternion, Pose, Vector3

@@ -27,7 +27,7 @@ start:
 		-v ./leap_motion_controller:/catkin_ws/src/leap_motion_controller \
 		--net host \
 		--name lmc lmc:latest \
-		bash -c "leapctl eula -y && leapd & roslaunch leap_motion_controller lmc.launch"
+		bash -c "source devel/setup.bash && roslaunch leap_motion_controller lmc.launch"
 
 debug: .start_if_not_running
 	docker exec -it lmc bash

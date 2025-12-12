@@ -1,57 +1,41 @@
-FROM personalroboticsimperial/ubuntu:22.04-amd64
-
+FROM dustynv/ros:noetic-ros-base-l4t-r35.4.1
 
 ARG PROJECT_PATH="/lmc"
 RUN mkdir -p ${PROJECT_PATH}
 WORKDIR ${PROJECT_PATH}
 
-RUN apt update && apt install -y gnupg2 && rm -rf /var/lib/apt/lists/*
-RUN wget -qO - https://repo.ultraleap.com/keys/apt/gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/ultraleap.gpg
-RUN echo 'deb [arch=amd64] https://repo.ultraleap.com/apt stable main' | tee /etc/apt/sources.list.d/ultraleap.list
+RUN sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654
+RUN apt-get update && apt-get install -y systemd wget python3-pip git build-essential cmake libnss-mdns freeglut3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && apt install -y freeglut3-dev \
-    git \
-    libnss-mdns \
-    ultraleap-hand-tracking
-
-RUN wget -qO Miniforge3.sh https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh \
-    && bash Miniforge3.sh -b -p /opt/miniforge3 \
-    && rm Miniforge3.sh
-
+RUN wget https://s3.eu-west-1.amazonaws.com/downloads.ultraleap.com/software/tracking-software/6.2.0/tracking-software-raspberry-pi-os-6.2.0.tar.gz --no-check-certificate -O /tmp/tracking-software-raspberry-pi-os-6.2.0.tar.gz
+RUN tar -xzf /tmp/tracking-software-raspberry-pi-os-6.2.0.tar.gz -C /tmp/ 
+RUN bash /tmp/ultraleap-hand-tracking-service_6.2.0.0-c98d293a-arm64/install_gemini.sh || true
+CMD ["libtrack_server", "-g", "daemon off;"]
 SHELL ["/bin/bash", "-c"]
 
 RUN mkdir -p /catkin_ws/src
 WORKDIR /catkin_ws
 COPY ./leap_motion_controller /catkin_ws/src/leap_motion_controller
 
-RUN . /opt/miniforge3/etc/profile.d/conda.sh \
-    && . /opt/miniforge3/etc/profile.d/mamba.sh \
-    && mamba create -n ros \
-    && mamba activate ros \
-    && pip install -U pip \
-    && conda config --env --add channels robostack-staging \
-    && mamba install -y ros-noetic-desktop-full \
-    && git clone --depth 1 https://github.com/ultraleap/leapc-python-bindings.git /opt/leapc-python-bindings \
-    && cd /opt/leapc-python-bindings/ \
-    && mkdir src \
-    && pip install -r requirements.txt \
-    && python -m build leapc-cffi \
-    && pip install leapc-cffi/dist/leapc_cffi-0.0.1.tar.gz \
-    && pip install -e leapc-python-api \
-    && pip install empy==3.* \
-    && catkin init && catkin build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 --verbose --workspace /catkin_ws
-    
-ENV GAZEBO_RESOURCE_PATH=""
-ENV GAZEBO_PLUGIN_PATH=""
-ENV GAZEBO_MODEL_PATH=""
-ENV LD_LIBRARY_PATH=""
-ENV CONDA_BUILD=""
-ENV ZSH_VERSION=""
-ENV ROS_DISTRO="noetic"
-ENV target_platform="amd64"
-ENV build_platform="amd64"
-ENV ROS_MASTER_URI="http://localhost:11311"
+RUN python3 -m pip install --upgrade pip
+ENV LEAPSDK_INSTALL_LOCATION="/opt/ultraleap/LeapSDK"
+RUN git clone --depth 1 https://github.com/ultraleap/leapc-python-bindings.git /opt/leapc-python-bindings
+RUN cd /opt/leapc-python-bindings/ \
+     && python3 -m pip install -r requirements.txt \
+     && python3 -m pip install -e leapc-python-api --use-pep517
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+RUN apt update
+RUN DEBIAN_FRONTEND=noninteractive apt install -y \ 
+    python3-rosdep \
+    python3-catkin-tools \ 
+    python3-rosinstall-generator \
+    python3-vcstools \
+    python3-vcstool \
+    ros-noetic-tf \
+    ros-noetic-tf2-ros \
+    ros-noetic-sensor-msgs \
+    ros-noetic-geometry-msgs \
+    ros-noetic-visualization-msgs
+
+RUN source /opt/ros/noetic/setup.bash && catkin init && catkin build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 --verbose --workspace /catkin_ws
