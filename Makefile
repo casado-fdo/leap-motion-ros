@@ -13,7 +13,6 @@ rviz ?= false
 	@if ! docker ps -a | grep -w lmc; then $(MAKE) start; fi
 
 start:
-	@xhost +si:localuser:root >> /dev/null
 	docker run -it --rm --privileged \
 		-e DISPLAY \
 		-e ROS_MASTER_URI=${ros_master_uri} \
