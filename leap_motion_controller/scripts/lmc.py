@@ -31,12 +31,15 @@ class LeapMotionController(leap.Listener):
         self.last_right_hand_msg = Hand()
         self.last_left_hand_msg = Hand()
 
+        self.rate = rospy.Rate(30) # Hz
+
         rospy.loginfo('LeapMotionController Node is Up!')
         connection = leap.Connection()
         connection.add_listener(self)
         with connection.open():
             connection.set_tracking_mode(leap.TrackingMode.Desktop)
-            rospy.spin()
+            while not rospy.is_shutdown():
+                self.rate.sleep()
 
 
     def leap_to_ros_coords(self, position=None, orientation=None):
