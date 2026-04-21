@@ -38,4 +38,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
     ros-noetic-geometry-msgs \
     ros-noetic-visualization-msgs
 
+RUN pip install pyusb
+
 RUN source /opt/ros/noetic/setup.bash && catkin init && catkin build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 --verbose --workspace /catkin_ws

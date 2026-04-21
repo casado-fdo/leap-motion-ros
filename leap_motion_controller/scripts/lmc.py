@@ -7,7 +7,10 @@ from std_msgs.msg import Header
 from leap_motion_controller.msg import Hand, Finger, Bone
 import copy
 import numpy as np
- 
+import usb.core
+import usb.util
+import time
+
 
 class LeapMotionController(leap.Listener):
     def __init__(self):
@@ -32,6 +35,16 @@ class LeapMotionController(leap.Listener):
         self.last_left_hand_msg = Hand()
 
         self.rate = rospy.Rate(30) # Hz
+        
+        # Timeout tracking for device stuck detection
+        self.last_frame_time = time.time()
+        self.frame_timeout = 2.0  # seconds without frames before considering device stuck
+        self.last_reset_time = 0
+        self.reset_cooldown = 15.0  # seconds to wait after reset before checking again
+        self.reset_recovery_time = 8.0  # additional time after reset for device to fully recover
+
+        # Find ultraleap device
+        self.device = self.find_ultraleap_device()
 
         rospy.loginfo('LeapMotionController Node is Up!')
         connection = leap.Connection()
@@ -39,6 +52,35 @@ class LeapMotionController(leap.Listener):
         with connection.open():
             connection.set_tracking_mode(leap.TrackingMode.Desktop)
             while not rospy.is_shutdown():
+                # Check if device is stuck (no frames received within timeout)
+                current_time = time.time()
+                # Only check for timeout if we're not in cooldown period after reset
+                time_since_reset = current_time - self.last_reset_time
+                effective_cooldown = self.reset_cooldown + self.reset_recovery_time
+                time_since_last_frame = current_time - self.last_frame_time
+                
+                if (time_since_reset > effective_cooldown and 
+                    time_since_last_frame > self.frame_timeout):
+                    rospy.logwarn("Device appears to be stuck, attempting reset...")
+                    try:
+                        if self.device is not None:
+                            self.device.reset()
+                            rospy.loginfo("Leap Motion device reset successfully.")
+                            # After successful reset, set frame time to allow for recovery
+                            self.last_frame_time = current_time - (self.frame_timeout - 2)  # Give 2 seconds grace period
+                        else:
+                            rospy.logwarn("Device not found, attempting to rediscover...")
+                            self.device = self.find_ultraleap_device()
+                            if self.device is not None:
+                                self.device.reset()
+                                rospy.loginfo("Leap Motion device reset successfully after rediscovery.")
+                                self.last_frame_time = current_time - (self.frame_timeout - 2)  # Give 2 seconds grace period
+                            else:
+                                rospy.logwarn("Could not rediscover Ultraleap device.")
+                        self.last_reset_time = current_time
+                    except Exception as e:
+                        rospy.logerr(f"Failed to reset device: {e}")
+                        self.last_reset_time = current_time  # Still set cooldown to avoid rapid retries
                 self.rate.sleep()
 
 
@@ -59,12 +101,15 @@ class LeapMotionController(leap.Listener):
 
 
     def on_tracking_event(self, frame):
+        # Update last frame time to indicate device is working
+        self.last_frame_time = time.time()
+        
         # Get the most recent frame and report some basic information
         rospy.loginfo_throttle(2, "Tracking....\nFrame id: %d, hands: %d" % (
               frame.tracking_frame_id, len(frame.hands)))
         
         # Get the current time
-        time = rospy.Time.now()
+        current_ros_time = rospy.Time.now()
 
         # Get the Leap Motion data, structure it, and publish it
         if len(frame.hands) > 0:
@@ -72,7 +117,7 @@ class LeapMotionController(leap.Listener):
                 hand_msg = Hand()
                 hand_msg.header = Header()
                 hand_msg.header.frame_id = self.base_link
-                hand_msg.header.stamp = time
+                hand_msg.header.stamp = current_ros_time
                 hand_msg.lmc_hand_id = hand.id
 
                 # Get the hand's normal vector and direction
@@ -100,10 +145,10 @@ class LeapMotionController(leap.Listener):
                 hand_msg.pinch_strength = hand.pinch_strength
 
                 # Get the hand's grab strength
-                grab = self.get_grab_range_msg(hand, time)
+                grab = self.get_grab_range_msg(hand, current_ros_time)
 
                 # Get the hand's pinch strength
-                pinch = self.get_pinch_range_msg(hand, time)
+                pinch = self.get_pinch_range_msg(hand, current_ros_time)
 
                 # Add the fingers to the hand message
                 hand_msg.finger_list = self.get_finger_list(hand, hand_msg.header)
@@ -284,6 +329,50 @@ class LeapMotionController(leap.Listener):
             filtered_finger.bone_list = filtered_bone_list
             filtered_fingerlist.append(filtered_finger)
         return filtered_fingerlist
+
+
+    def find_ultraleap_device(self):
+        # Known Ultraleap VID/PID combinations (can be extended)
+        known_devices = [
+            (0x2936, 0x1206),  # Current Ultraleap device
+            # Add other known Ultraleap/Leap Motion VID/PID combinations here if needed
+        ]
+        
+        # First try to find by known VID/PID combinations
+        for vid, pid in known_devices:
+            device = usb.core.find(idVendor=vid, idProduct=pid)
+            if device is not None:
+                try:
+                    product = usb.util.get_string(device, device.iProduct)
+                    manufacturer = usb.util.get_string(device, device.iManufacturer)
+                    rospy.loginfo(f"Found Ultraleap device by VID/PID: {manufacturer} {product} (VID: {hex(device.idVendor)}, PID: {hex(device.idProduct)})")
+                    return device
+                except Exception:
+                    rospy.loginfo(f"Found Ultraleap device by VID/PID: (VID: {hex(device.idVendor)}, PID: {hex(device.idProduct)})")
+                    return device
+        
+        # Fallback: scan all devices and look for Ultraleap/Leap in device names
+        rospy.loginfo("Scanning all USB devices for Ultraleap/Leap Motion...")
+        all_devices = usb.core.find(find_all=True)
+        
+        for device in all_devices:
+            try:
+                product = usb.util.get_string(device, device.iProduct)
+                manufacturer = usb.util.get_string(device, device.iManufacturer)
+                
+                if product and manufacturer and ("Ultraleap" in product or "Leap" in product or "Ultraleap" in manufacturer or "Leap" in manufacturer):
+                    rospy.loginfo(f"Found Ultraleap device by name: {manufacturer} {product} (VID: {hex(device.idVendor)}, PID: {hex(device.idProduct)})")
+                    # Add this VID/PID to known devices for future faster detection
+                    new_vid_pid = (device.idVendor, device.idProduct)
+                    if new_vid_pid not in known_devices:
+                        rospy.loginfo(f"Adding new VID/PID combination to known devices: {hex(device.idVendor)}:{hex(device.idProduct)}")
+                    return device
+            except Exception:
+                # Some devices will fail to return strings (e.g., hubs or system devices)
+                continue
+        
+        rospy.logwarn("Ultraleap device not found")
+        return None
 
 
 if __name__ == '__main__':
