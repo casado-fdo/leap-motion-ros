@@ -40,8 +40,7 @@ class LeapMotionController(leap.Listener):
         self.last_frame_time = time.time()
         self.frame_timeout = 2.0  # seconds without frames before considering device stuck
         self.last_reset_time = 0
-        self.reset_cooldown = 15.0  # seconds to wait after reset before checking again
-        self.reset_recovery_time = 8.0  # additional time after reset for device to fully recover
+        self.reset_cooldown = 10.0  # seconds to wait after reset before checking again
 
         # Find ultraleap device
         self.device = self.find_ultraleap_device()
@@ -56,7 +55,7 @@ class LeapMotionController(leap.Listener):
                 current_time = time.time()
                 # Only check for timeout if we're not in cooldown period after reset
                 time_since_reset = current_time - self.last_reset_time
-                effective_cooldown = self.reset_cooldown + self.reset_recovery_time
+                effective_cooldown = self.reset_cooldown
                 time_since_last_frame = current_time - self.last_frame_time
                 
                 if (time_since_reset > effective_cooldown and 
